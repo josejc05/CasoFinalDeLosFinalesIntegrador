@@ -73,4 +73,8 @@ public class UserAccount implements Comparable<UserAccount> {
     public String toString() {
         return "Alias: " + alias + ", Email: " + email;
     }
+
+    public String getUserInfo() {
+        return "Alias: " + alias + ", Email: " + email + ", Siguiendo a: " + following.size() + ", Seguidores: " + followers.size() + ", Tweets: " + tweets.size();
+    }
 }

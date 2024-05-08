@@ -179,12 +179,17 @@ public class Main extends JFrame {
                 JOptionPane.showMessageDialog(null, "Usuario no encontrado.");
                 return;
             }
-            int tweetId = Integer.parseInt(JOptionPane.showInputDialog("Introduzca el id del tweet a retweetear:"));
-            Tweet tweetToRetweet = findTweetById(userToRetweet, tweetId);
-            if (tweetToRetweet == null) {
-                JOptionPane.showMessageDialog(null, "Tweet no encontrado.");
+            List<Tweet> tweetsToRetweet = userToRetweet.getTweets();
+            if (tweetsToRetweet.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "El usuario no tiene tweets para retweetear.");
                 return;
             }
+            String[] options = tweetsToRetweet.stream().map(Tweet::toString).toArray(String[]::new);
+            int selectedOption = JOptionPane.showOptionDialog(null, "Seleccione el tweet a retweetear:", "Retweetear un tweet", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+            if (selectedOption == JOptionPane.CLOSED_OPTION) {
+                return;
+            }
+            Tweet tweetToRetweet = tweetsToRetweet.get(selectedOption);
             String message = JOptionPane.showInputDialog("Introduzca el mensaje del retweet:");
             user.retweet(tweetToRetweet, message);
         });

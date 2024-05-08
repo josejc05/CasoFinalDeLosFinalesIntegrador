@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.util.Collections;
 
 public class Main extends JFrame {
+    private JButton inboxButton;
     private JButton createUserButton;
     private JButton postTweetButton;
     private JButton followUserButton;
@@ -25,15 +26,18 @@ public class Main extends JFrame {
     private JButton viewRetweetsButton;
     private JButton exitButton;
     private List<UserAccount> users;
+    private List<String> inbox;
 
     public Main() {
         setTitle("Twitter App");
         setSize(400, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(10, 1));
+        setLayout(new GridLayout(11, 1));
 
         users = loadUsersFromFile("users.txt");
+        inbox = new ArrayList<>();
 
+        inboxButton = new JButton("Bandeja de entrada");
         createUserButton = new JButton("Crear una cuenta de usuario");
         postTweetButton = new JButton("Publicar un tweet");
         followUserButton = new JButton("Seguir a otro usuario");
@@ -45,6 +49,7 @@ public class Main extends JFrame {
         viewRetweetsButton = new JButton("Ver retweets del usuario");
         exitButton = new JButton("Salir");
 
+        add(inboxButton);
         add(createUserButton);
         add(postTweetButton);
         add(followUserButton);
@@ -56,12 +61,21 @@ public class Main extends JFrame {
         add(viewRetweetsButton);
         add(exitButton);
 
+        inboxButton.addActionListener(e -> {
+            StringBuilder inboxContent = new StringBuilder();
+            for (String entry : inbox) {
+                inboxContent.append(entry).append("\n");
+            }
+            JOptionPane.showMessageDialog(null, inboxContent.toString());
+        });
+
         createUserButton.addActionListener(e -> {
             String alias = JOptionPane.showInputDialog("Introduzca un alias:");
             String email = JOptionPane.showInputDialog("Introduzca un email:");
             if (Utils.isValidEmail(email) && Utils.isValidAlias(alias)) {
                 users.add(new UserAccount(alias, email));
                 JOptionPane.showMessageDialog(null, "La cuenta de usuario ha sido creada.");
+                inbox.add(0, "El usuario " + alias + " ha creado una cuenta.");
             } else {
                 JOptionPane.showMessageDialog(null, "La cuenta de usuario no es válida.");
             }
@@ -80,6 +94,7 @@ public class Main extends JFrame {
             }
             String message = JOptionPane.showInputDialog("Introduzca el mensaje del tweet:");
             postTweet(user, message);
+            inbox.add(0, "El usuario " + alias + " ha publicado un tweet: " + message);
         });
 
         followUserButton.addActionListener(e -> {
@@ -102,6 +117,7 @@ public class Main extends JFrame {
             user.getFollowing().add(userToFollow);
             userToFollow.getFollowers().add(user);
             JOptionPane.showMessageDialog(null, "El usuario " + alias + " ahora está siguiendo a " + aliasToFollow);
+            inbox.add(0, "El usuario " + alias + " ahora está siguiendo a " + aliasToFollow);
         });
 
         sortUsersButton.addActionListener(e -> {
@@ -160,6 +176,7 @@ public class Main extends JFrame {
             }
             String message = JOptionPane.showInputDialog("Introduzca el mensaje del mensaje directo:");
             sender.sendDirectMessage(receiver, message);
+            inbox.add(0, "El usuario " + senderAlias + " ha enviado un mensaje directo a " + receiverAlias);
         });
 
         retweetButton.addActionListener(e -> {
@@ -192,6 +209,7 @@ public class Main extends JFrame {
             Tweet tweetToRetweet = tweetsToRetweet.get(selectedOption);
             String message = JOptionPane.showInputDialog("Introduzca el mensaje del retweet:");
             user.retweet(tweetToRetweet, message);
+            inbox.add(0, "El usuario " + alias + " ha retweeteado un tweet de " + aliasToRetweet);
         });
 
         viewRetweetsButton.addActionListener(e -> {

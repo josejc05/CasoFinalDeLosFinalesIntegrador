@@ -4,6 +4,8 @@ import user.UserAccount;
 import java.time.LocalDate;
 
 public class Tweet {
+    private int id;
+    private static int nextId = 0;
     private UserAccount sender;
     private String message;
     private LocalDate time;
@@ -12,9 +14,14 @@ public class Tweet {
         if (message.length() > 140) {
             throw new IllegalArgumentException("Message cannot be longer than 140 characters");
         }
+        this.id = nextId++;
         this.sender = sender;
         this.message = message;
         this.time = time;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public UserAccount getSender() {

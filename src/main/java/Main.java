@@ -89,7 +89,11 @@ public class Main extends JFrame {
 
         sortUsersButton.addActionListener(e -> {
             Collections.sort(users);
-            JOptionPane.showMessageDialog(null, "Los usuarios han sido ordenados por email de forma ascendente.");
+            StringBuilder sortedUsers = new StringBuilder();
+            for (UserAccount user : users) {
+                sortedUsers.append(user.toString()).append("\n");
+            }
+            JOptionPane.showMessageDialog(null, "Los usuarios han sido ordenados por email de forma ascendente:\n" + sortedUsers.toString());
         });
 
         exitButton.addActionListener(e -> {

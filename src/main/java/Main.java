@@ -1,5 +1,6 @@
 import user.UserAccount;
 import tweet.Tweet;
+import tweet.DirectMessage;
 import utils.Utils;
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +19,7 @@ public class Main extends JFrame {
     private JButton sortUsersButton;
     private JButton userInfoButton;
     private JButton userTweetsButton;
+    private JButton sendDirectMessageButton;
     private JButton exitButton;
     private List<UserAccount> users;
 
@@ -25,7 +27,7 @@ public class Main extends JFrame {
         setTitle("Twitter App");
         setSize(400, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(7, 1));
+        setLayout(new GridLayout(8, 1));
 
         users = loadUsersFromFile("users.txt");
 
@@ -35,6 +37,7 @@ public class Main extends JFrame {
         sortUsersButton = new JButton("Ordenar usuarios por email");
         userInfoButton = new JButton("Obtener información del usuario");
         userTweetsButton = new JButton("Ver tweets del usuario");
+        sendDirectMessageButton = new JButton("Enviar un mensaje directo");
         exitButton = new JButton("Salir");
 
         add(createUserButton);
@@ -43,6 +46,7 @@ public class Main extends JFrame {
         add(sortUsersButton);
         add(userInfoButton);
         add(userTweetsButton);
+        add(sendDirectMessageButton);
         add(exitButton);
 
         createUserButton.addActionListener(e -> {
@@ -128,6 +132,27 @@ public class Main extends JFrame {
                 return;
             }
             JOptionPane.showMessageDialog(null, user.getTweetsInfo());
+        });
+
+        sendDirectMessageButton.addActionListener(e -> {
+            if (users.size() < 2) {
+                JOptionPane.showMessageDialog(null, "No hay suficientes usuarios para enviar un mensaje directo.");
+                return;
+            }
+            String senderAlias = JOptionPane.showInputDialog("Introduzca el alias del usuario que va a enviar el mensaje:");
+            UserAccount sender = findUserByAlias(users, senderAlias);
+            if (sender == null) {
+                JOptionPane.showMessageDialog(null, "Usuario emisor no encontrado.");
+                return;
+            }
+            String receiverAlias = JOptionPane.showInputDialog("Introduzca el alias del usuario que va a recibir el mensaje:");
+            UserAccount receiver = findUserByAlias(users, receiverAlias);
+            if (receiver == null) {
+                JOptionPane.showMessageDialog(null, "Usuario receptor no encontrado.");
+                return;
+            }
+            String message = JOptionPane.showInputDialog("Introduzca el mensaje del mensaje directo:");
+            sender.sendDirectMessage(receiver, message);
         });
 
         exitButton.addActionListener(e -> {

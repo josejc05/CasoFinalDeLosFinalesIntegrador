@@ -5,6 +5,7 @@ import tweet.DirectMessage;
 import tweet.Retweet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.time.LocalDate;
 
 public class UserAccount implements Comparable<UserAccount> {
@@ -97,5 +98,12 @@ public class UserAccount implements Comparable<UserAccount> {
             tweetsInfo.append(tweet.toString()).append("\n");
         }
         return tweetsInfo.toString();
+    }
+
+    public String getRetweetsInfo() {
+        return tweets.stream()
+                .filter(t -> t instanceof Retweet)
+                .map(Tweet::toString)
+                .collect(Collectors.joining("\n"));
     }
 }

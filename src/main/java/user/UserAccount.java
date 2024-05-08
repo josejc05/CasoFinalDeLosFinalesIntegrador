@@ -1,6 +1,7 @@
 package user;
 
 import tweet.Tweet;
+import tweet.DirectMessage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,6 +63,11 @@ public class UserAccount implements Comparable<UserAccount> {
         for (UserAccount follower : followers) {
             follower.getTimeline().add(tweet);
         }
+    }
+
+    public void sendDirectMessage(UserAccount receiver, String message) {
+        DirectMessage dm = new DirectMessage(this, message, LocalDate.now(), receiver);
+        tweets.add(dm);
     }
 
     @Override

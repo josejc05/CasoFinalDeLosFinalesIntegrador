@@ -6,6 +6,10 @@ import java.awt.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Collections;
 
 public class Main extends JFrame {
     private JButton createUserButton;
@@ -20,7 +24,7 @@ public class Main extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridLayout(4, 1));
 
-        users = new ArrayList<>();
+        users = loadUsersFromFile("users.txt");
 
         createUserButton = new JButton("Crear una cuenta de usuario");
         postTweetButton = new JButton("Publicar un tweet");
@@ -55,9 +59,7 @@ public class Main extends JFrame {
                 return;
             }
             String message = JOptionPane.showInputDialog("Introduzca el mensaje del tweet:");
-            Tweet tweet = new Tweet(user, message, LocalDate.now());
-            user.getTweets().add(tweet);
-            JOptionPane.showMessageDialog(null, "El tweet ha sido publicado.");
+            postTweet(user, message);
         });
 
         followUserButton.addActionListener(e -> {
@@ -87,6 +89,24 @@ public class Main extends JFrame {
         });
     }
 
+    private List<UserAccount> loadUsersFromFile(String filename) {
+        List<UserAccount> users = new ArrayList<>();
+        try {
+            Scanner scanner = new Scanner(new File(filename));
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] parts = line.split(",");
+                String alias = parts[0];
+                String email = parts[1];
+                users.add(new UserAccount(alias, email));
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + filename);
+        }
+        return users;
+    }
+
     private UserAccount findUserByAlias(List<UserAccount> users, String alias) {
         for (UserAccount user : users) {
             if (user.getAlias().equals(alias)) {
@@ -94,6 +114,16 @@ public class Main extends JFrame {
             }
         }
         return null;
+    }
+
+    private void postTweet(UserAccount user, String message) {
+        if (message.length() > 140) {
+            JOptionPane.showMessageDialog(null, "El mensaje no puede tener más de 140 caracteres.");
+            return;
+        }
+        Tweet tweet = new Tweet(user, message, LocalDate.now());
+        user.getTweets().add(tweet);
+        JOptionPane.showMessageDialog(null, "El tweet ha sido publicado.");
     }
 
     public static void main(String[] args) {

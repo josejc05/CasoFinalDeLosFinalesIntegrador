@@ -77,4 +77,12 @@ public class UserAccount implements Comparable<UserAccount> {
     public String getUserInfo() {
         return "Alias: " + alias + ", Email: " + email + ", Siguiendo a: " + following.size() + ", Seguidores: " + followers.size() + ", Tweets: " + tweets.size();
     }
+
+    public String getTweetsInfo() {
+        StringBuilder tweetsInfo = new StringBuilder();
+        for (Tweet tweet : tweets) {
+            tweetsInfo.append(tweet.toString()).append("\n");
+        }
+        return tweetsInfo.toString();
+    }
 }

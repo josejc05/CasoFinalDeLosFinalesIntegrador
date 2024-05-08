@@ -15,6 +15,7 @@ public class Main extends JFrame {
     private JButton createUserButton;
     private JButton postTweetButton;
     private JButton followUserButton;
+    private JButton sortUsersButton;
     private JButton exitButton;
     private List<UserAccount> users;
 
@@ -22,18 +23,20 @@ public class Main extends JFrame {
         setTitle("Twitter App");
         setSize(400, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(4, 1));
+        setLayout(new GridLayout(5, 1));
 
         users = loadUsersFromFile("users.txt");
 
         createUserButton = new JButton("Crear una cuenta de usuario");
         postTweetButton = new JButton("Publicar un tweet");
         followUserButton = new JButton("Seguir a otro usuario");
+        sortUsersButton = new JButton("Ordenar usuarios por email");
         exitButton = new JButton("Salir");
 
         add(createUserButton);
         add(postTweetButton);
         add(followUserButton);
+        add(sortUsersButton);
         add(exitButton);
 
         createUserButton.addActionListener(e -> {
@@ -82,6 +85,11 @@ public class Main extends JFrame {
             user.getFollowing().add(userToFollow);
             userToFollow.getFollowers().add(user);
             JOptionPane.showMessageDialog(null, "El usuario " + alias + " ahora está siguiendo a " + aliasToFollow);
+        });
+
+        sortUsersButton.addActionListener(e -> {
+            Collections.sort(users);
+            JOptionPane.showMessageDialog(null, "Los usuarios han sido ordenados por email de forma ascendente.");
         });
 
         exitButton.addActionListener(e -> {

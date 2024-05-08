@@ -17,6 +17,7 @@ public class Main extends JFrame {
     private JButton followUserButton;
     private JButton sortUsersButton;
     private JButton userInfoButton;
+    private JButton userTweetsButton;
     private JButton exitButton;
     private List<UserAccount> users;
 
@@ -24,7 +25,7 @@ public class Main extends JFrame {
         setTitle("Twitter App");
         setSize(400, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(6, 1));
+        setLayout(new GridLayout(7, 1));
 
         users = loadUsersFromFile("users.txt");
 
@@ -33,6 +34,7 @@ public class Main extends JFrame {
         followUserButton = new JButton("Seguir a otro usuario");
         sortUsersButton = new JButton("Ordenar usuarios por email");
         userInfoButton = new JButton("Obtener información del usuario");
+        userTweetsButton = new JButton("Ver tweets del usuario");
         exitButton = new JButton("Salir");
 
         add(createUserButton);
@@ -40,6 +42,7 @@ public class Main extends JFrame {
         add(followUserButton);
         add(sortUsersButton);
         add(userInfoButton);
+        add(userTweetsButton);
         add(exitButton);
 
         createUserButton.addActionListener(e -> {
@@ -111,6 +114,20 @@ public class Main extends JFrame {
                 return;
             }
             JOptionPane.showMessageDialog(null, user.getUserInfo());
+        });
+
+        userTweetsButton.addActionListener(e -> {
+            if (users.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "No hay usuarios disponibles.");
+                return;
+            }
+            String alias = JOptionPane.showInputDialog("Introduzca el alias del usuario:");
+            UserAccount user = findUserByAlias(users, alias);
+            if (user == null) {
+                JOptionPane.showMessageDialog(null, "Usuario no encontrado.");
+                return;
+            }
+            JOptionPane.showMessageDialog(null, user.getTweetsInfo());
         });
 
         exitButton.addActionListener(e -> {

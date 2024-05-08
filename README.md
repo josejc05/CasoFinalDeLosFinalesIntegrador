@@ -71,5 +71,8 @@ El tipo de recursividad que se está utilizando aquí es la recursividad lineal.
 La complejidad computacional de este algoritmo es O(n), donde n es el número de dígitos en el número. Esto se debe a que se está realizando una única operación (suma) para cada dígito en el número. El número de operaciones escala linealmente con el tamaño de la entrada, de ahí la complejidad de tiempo lineal.
 (el código está en el archivo .java dentro del zip)
 
+Ejercicio 5:
 
+2.d) · No es necesario modificar los atributos timeline y tweets de la clase UserAccount para que contengan elementos de la clase hija Retweet. Esto se debe a que Retweet es una subclase de Tweet, por lo que un Retweet es un Tweet. En Java, una lista de una superclase puede contener objetos de cualquier subclase. Por lo tanto, una List<Tweet> puede contener objetos Tweet, Retweet y DirectMessage.  
+· No es necesario modificar el método tweet(Tweet tweet1) de la clase UserAccount para que pueda enviar también objetos de tipo Retweet. Esto se debe a que Retweet es una subclase de Tweet, por lo que un Retweet es un Tweet. En Java, un método que acepta un objeto de una superclase también puede aceptar objetos de cualquier subclase. Por lo tanto, un método que acepta un Tweet también puede aceptar un Retweet y un DirectMessage.
 

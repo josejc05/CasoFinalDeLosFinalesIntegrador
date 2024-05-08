@@ -2,6 +2,7 @@ package user;
 
 import tweet.Tweet;
 import tweet.DirectMessage;
+import tweet.Retweet;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDate;
@@ -69,6 +70,11 @@ public class UserAccount implements Comparable<UserAccount> {
     public void sendDirectMessage(UserAccount receiver, String message) {
         DirectMessage dm = new DirectMessage(this, message, LocalDate.now(), receiver);
         tweets.add(dm);
+    }
+
+    public void retweet(Tweet tweetToRetweet, String message) {
+        Retweet retweet = new Retweet(this, message, LocalDate.now(), tweetToRetweet);
+        tweets.add(retweet);
     }
 
     @Override

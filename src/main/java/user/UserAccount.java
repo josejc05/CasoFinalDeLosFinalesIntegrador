@@ -4,7 +4,7 @@ import tweet.Tweet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserAccount {
+public class UserAccount implements Comparable<UserAccount> {
     private String alias;
     private String email;
     private List<Tweet> tweets;
@@ -46,6 +46,11 @@ public class UserAccount {
 
     public List<UserAccount> getFollowing() {
         return following;
+    }
+
+    @Override
+    public int compareTo(UserAccount other) {
+        return this.email.compareTo(other.email);
     }
 
     @Override

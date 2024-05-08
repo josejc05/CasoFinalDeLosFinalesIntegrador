@@ -48,6 +48,22 @@ public class UserAccount implements Comparable<UserAccount> {
         return following;
     }
 
+    public void follow(UserAccount userToFollow) {
+        if (!following.contains(userToFollow)) {
+            following.add(userToFollow);
+            userToFollow.getFollowers().add(this);
+        } else {
+            System.out.println("Ya estás siguiendo a este usuario.");
+        }
+    }
+
+    public void tweet(Tweet tweet) {
+        tweets.add(tweet);
+        for (UserAccount follower : followers) {
+            follower.getTimeline().add(tweet);
+        }
+    }
+
     @Override
     public int compareTo(UserAccount other) {
         return this.email.compareTo(other.email);

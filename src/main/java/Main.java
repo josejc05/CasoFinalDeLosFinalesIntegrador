@@ -22,6 +22,7 @@ public class Main extends JFrame {
     private JButton userTweetsButton;
     private JButton sendDirectMessageButton;
     private JButton retweetButton;
+    private JButton viewRetweetsButton;
     private JButton exitButton;
     private List<UserAccount> users;
 
@@ -29,7 +30,7 @@ public class Main extends JFrame {
         setTitle("Twitter App");
         setSize(400, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(9, 1));
+        setLayout(new GridLayout(10, 1));
 
         users = loadUsersFromFile("users.txt");
 
@@ -41,6 +42,7 @@ public class Main extends JFrame {
         userTweetsButton = new JButton("Ver tweets del usuario");
         sendDirectMessageButton = new JButton("Enviar un mensaje directo");
         retweetButton = new JButton("Retweetear un tweet");
+        viewRetweetsButton = new JButton("Ver retweets del usuario");
         exitButton = new JButton("Salir");
 
         add(createUserButton);
@@ -51,6 +53,7 @@ public class Main extends JFrame {
         add(userTweetsButton);
         add(sendDirectMessageButton);
         add(retweetButton);
+        add(viewRetweetsButton);
         add(exitButton);
 
         createUserButton.addActionListener(e -> {
@@ -170,14 +173,34 @@ public class Main extends JFrame {
                 JOptionPane.showMessageDialog(null, "Usuario no encontrado.");
                 return;
             }
+            String aliasToRetweet = JOptionPane.showInputDialog("Introduzca el alias del usuario del cual se va a retweetear un tweet:");
+            UserAccount userToRetweet = findUserByAlias(users, aliasToRetweet);
+            if (userToRetweet == null) {
+                JOptionPane.showMessageDialog(null, "Usuario no encontrado.");
+                return;
+            }
             int tweetId = Integer.parseInt(JOptionPane.showInputDialog("Introduzca el id del tweet a retweetear:"));
-            Tweet tweetToRetweet = findTweetById(tweetId);
+            Tweet tweetToRetweet = findTweetById(userToRetweet, tweetId);
             if (tweetToRetweet == null) {
                 JOptionPane.showMessageDialog(null, "Tweet no encontrado.");
                 return;
             }
             String message = JOptionPane.showInputDialog("Introduzca el mensaje del retweet:");
             user.retweet(tweetToRetweet, message);
+        });
+
+        viewRetweetsButton.addActionListener(e -> {
+            if (users.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "No hay usuarios disponibles.");
+                return;
+            }
+            String alias = JOptionPane.showInputDialog("Introduzca el alias del usuario:");
+            UserAccount user = findUserByAlias(users, alias);
+            if (user == null) {
+                JOptionPane.showMessageDialog(null, "Usuario no encontrado.");
+                return;
+            }
+            JOptionPane.showMessageDialog(null, user.getRetweetsInfo());
         });
 
         exitButton.addActionListener(e -> {
@@ -212,12 +235,10 @@ public class Main extends JFrame {
         return null;
     }
 
-    private Tweet findTweetById(int id) {
-        for (UserAccount user : users) {
-            for (Tweet tweet : user.getTweets()) {
-                if (tweet.getId() == id) {
-                    return tweet;
-                }
+    private Tweet findTweetById(UserAccount user, int id) {
+        for (Tweet tweet : user.getTweets()) {
+            if (tweet.getId() == id) {
+                return tweet;
             }
         }
         return null;
